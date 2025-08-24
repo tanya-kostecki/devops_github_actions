@@ -20,4 +20,4 @@ jobs:
         run: npm run test
 
       - name: Сборка
-        run: docker built -t ${{ secrets.DOCKER_USER }}/devops-nodejs-starter:${{ github.sha }} .
+        run: docker build -t ${{ secrets.DOCKER_USER }}/devops-nodejs-starter:${{ github.sha }} .
