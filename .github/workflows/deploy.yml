@@ -21,3 +21,9 @@ jobs:
 
       - name: Сборка
         run: docker build -t ${{ secrets.DOCKER_USER }}/devops-nodejs-starter:${{ github.sha }} .
+
+      - name: Логин в Docker Hub
+        run: echo "${{ secrets.DOCKER_PASS }}" | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin
+ 
+      - name: Публикация Docker-образа
+        run: docker push ${{ secrets.DOCKER_USER }}/devops-nodejs-starter:${{ github.sha }}
