@@ -1,4 +1,4 @@
-name: CI Pipeline
+name: CI/CD Pipeline
  
 on:
   push:
@@ -27,3 +27,17 @@ jobs:
  
       - name: Публикация Docker-образа
         run: docker push ${{ secrets.DOCKER_USER }}/devops-nodejs-starter:${{ github.sha }}
+
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.SSH_HOST}}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            echo "${{ secrets.DOCKER_PASS }}" | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin
+            docker pull ${{ secrets.DOCKER_USER }}/devops-nodejs-starter:${{ github.sha }}
+            docker stop devops-nodejs-starter || true
+            docker rm devops-nodejs-starter || true
+            docker run -d --name devops-nodejs-starter -p 4545:4545 ${{ secrets.DOCKER_USER }}/devops-nodejs-starter:${{ github.sha }}
+
