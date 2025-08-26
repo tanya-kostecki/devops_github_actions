@@ -34,6 +34,8 @@ jobs:
           host: ${{ secrets.SSH_HOST}}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
+          timeout: 60s
+          debug: true
           script: |
             echo "${{ secrets.DOCKER_PASS }}" | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin
             docker pull ${{ secrets.DOCKER_USER }}/devops-nodejs-starter:${{ github.sha }}
